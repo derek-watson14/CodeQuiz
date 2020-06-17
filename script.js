@@ -116,7 +116,7 @@ const clearBtn = document.querySelector(".clear-btn");
 // Global Variables
 let highscores;
 let questionIndex = 0;
-let clock = 180;
+let clock = 120;
 let ticker;
 
 // Initialize Application
@@ -210,7 +210,7 @@ function endGame() {
 function abortGameTo(card) {
   clearInterval(ticker);
   questionIndex = 0;
-  clock = 100;
+  clock = 120;
   clockDisplay.innerHTML = clock;
   showCard(card);
 }
