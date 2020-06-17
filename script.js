@@ -33,6 +33,7 @@ const questions = [
 // Clock and Nav
 const clockDisplay = document.querySelector(".clock");
 const highscoresNav = document.querySelector(".see-highscores");
+const newGameNav = document.querySelector(".new-game");
 
 // Start Card
 const startCard = document.querySelector(".start-card");
@@ -49,7 +50,7 @@ const initialsInput = document.querySelector("#initials");
 // Highscores Card
 const scoreCard = document.querySelector(".score-card");
 const scoreTableBody = document.querySelector(".scores-body");
-const backBtn = document.querySelector(".back-btn");
+const newGameBtn = document.querySelector(".newGame-btn");
 const clearBtn = document.querySelector(".clear-btn");
 
 // Global Variables
@@ -211,7 +212,13 @@ highscoresNav.addEventListener("click", () => {
 
 clearBtn.addEventListener("click", clearHighscores);
 
-backBtn.addEventListener("click", () => {
+newGameBtn.addEventListener("click", () => {
+  abortGame();
+  hideAllCards();
+  displayElement(startCard, true);
+});
+
+newGameNav.addEventListener("click", () => {
   abortGame();
   hideAllCards();
   displayElement(startCard, true);
