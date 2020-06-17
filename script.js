@@ -55,12 +55,108 @@ const clearBtn = document.querySelector(".clear-btn");
 
 // Global Variables
 let highscores;
-let clock = 100;
-// Set clock on page load
-clockDisplay.innerHTML = clock;
-let ticker;
 let questionIndex = 0;
+let clock = 100;
+let ticker;
 
+// Initialize Application
+function init() {
+  clockDisplay.innerHTML = clock;
+  fetchHighscores();
+  displayElement(startCard, true);
+}
+
+// Display and Utility Functions
+function displayElement(element, on) {
+  if (on) {
+    element.classList.remove("d-none");
+    element.classList.add("d-block");
+  } else {
+    element.classList.remove("d-block");
+    element.classList.add("d-none");
+  }
+}
+function hideAllCards() {
+  displayElement(startCard, false);
+  displayElement(questionCard, false);
+  displayElement(endCard, false);
+  displayElement(scoreCard, false);
+}
+
+// Game Functions
+function startGame() {
+  startTimer();
+  displayQuestion(questions[questionIndex]);
+}
+function startTimer() {
+  ticker = setInterval(() => {
+    if (clock > 0) {
+      clock--;
+      if (clock < 10) {
+        clockDisplay.style.color = "firebrick";
+      }
+      clockDisplay.innerHTML = clock;
+    } else {
+      endGame();
+    }
+  }, 1000);
+}
+function displayQuestion(q) {
+  questionCard.querySelector(".question").textContent = q.question;
+  questionCard.querySelectorAll(".option").forEach((item, index) => {
+    item.innerHTML = `${index + 1}. ${q.options[index][0]}`;
+    item.setAttribute("data-correct", q.options[index][1]);
+    item.parentElement.addEventListener("click", handleSelection);
+  });
+}
+function handleSelection(e) {
+  const correct = e.target.dataset.correct === "true";
+  const message = correct
+    ? ["Correct!", "forestgreen"]
+    : ["Incorrect!", "firebrick"];
+  flashResult(message);
+  if (!correct) {
+    clock = clock - 10;
+    clockDisplay.innerHTML = clock;
+  }
+  advanceGame();
+}
+function flashResult(message) {
+  const resultDisplay = questionCard.querySelector(".q-result");
+  displayElement(resultDisplay, true);
+  resultDisplay.lastElementChild.innerHTML = message[0];
+  resultDisplay.lastElementChild.style.color = message[1];
+  clockDisplay.style.color = message[1];
+  const flash = setTimeout(() => {
+    displayElement(resultDisplay, false);
+    clockDisplay.style.color = "inherit";
+    clearTimeout(flash);
+  }, 1500);
+}
+function advanceGame() {
+  if (questionIndex < questions.length - 1) {
+    questionIndex++;
+    displayQuestion(questions[questionIndex]);
+  } else {
+    endGame();
+  }
+}
+function endGame() {
+  displayElement(questionCard, false);
+  displayElement(endCard, true);
+  clearInterval(ticker);
+  endCard.querySelector(".final-score").textContent = clock;
+}
+function abortGameTo(card) {
+  clearInterval(ticker);
+  questionIndex = 0;
+  clock = 100;
+  clockDisplay.innerHTML = clock;
+  hideAllCards();
+  displayElement(card, true);
+}
+
+// Highscore Functions
 function fetchHighscores() {
   let localHighscores = localStorage.getItem("highscores");
   if (localHighscores) {
@@ -70,19 +166,16 @@ function fetchHighscores() {
     localStorage.setItem("highscores", JSON.stringify(highscores));
   }
 }
-
 function updateHighscores(newHighscore) {
   highscores.push(newHighscore);
   highscores = highscores.sort((a, b) => b.score - a.score);
   localStorage.setItem("highscores", JSON.stringify(highscores));
 }
-
 function clearHighscores() {
   highscores = [];
   localStorage.setItem("highscores", JSON.stringify(highscores));
   displayHighscores();
 }
-
 function displayHighscores() {
   scoreTableBody.innerHTML = "";
   highscores.forEach((item, index) => {
@@ -104,128 +197,20 @@ function displayHighscores() {
   });
 }
 
-function displayElement(element, on) {
-  if (on) {
-    element.classList.remove("d-none");
-    element.classList.add("d-block");
-  } else {
-    element.classList.remove("d-block");
-    element.classList.add("d-none");
-  }
-}
-
-function hideAllCards() {
-  displayElement(startCard, false);
-  displayElement(questionCard, false);
-  displayElement(endCard, false);
-  displayElement(scoreCard, false);
-}
-
-function endGame() {
-  displayElement(questionCard, false);
-  displayElement(endCard, true);
-  clearInterval(ticker);
-  endCard.querySelector(".final-score").textContent = clock;
-}
-
-function abortGame() {
-  clearInterval(ticker);
-  questionIndex = 0;
-  clock = 100;
-  clockDisplay.innerHTML = clock;
-}
-
-function startTimer() {
-  ticker = setInterval(() => {
-    if (clock > 0) {
-      clock--;
-      if (clock < 10) {
-        clockDisplay.style.color = "firebrick";
-      }
-      clockDisplay.innerHTML = clock;
-    } else {
-      endGame();
-    }
-  }, 1000);
-}
-
-function flashResult(message) {
-  const resultDisplay = questionCard.querySelector(".q-result");
-  displayElement(resultDisplay, true);
-  resultDisplay.lastElementChild.innerHTML = message[0];
-  resultDisplay.lastElementChild.style.color = message[1];
-  clockDisplay.style.color = message[1];
-  const flash = setTimeout(() => {
-    displayElement(resultDisplay, false);
-    clockDisplay.style.color = "inherit";
-    clearTimeout(flash);
-  }, 1000);
-}
-
-function handleSelection(e) {
-  const correct = e.target.dataset.correct === "true";
-  const message = correct
-    ? ["Correct!", "forestgreen"]
-    : ["Incorrect!", "firebrick"];
-  flashResult(message);
-  if (!correct) {
-    clock = clock - 10;
-    clockDisplay.innerHTML = clock;
-  }
-  advanceGame();
-}
-
-function advanceGame() {
-  if (questionIndex < questions.length - 1) {
-    questionIndex++;
-    displayQuestion(questions[questionIndex]);
-  } else {
-    endGame();
-  }
-}
-
-function displayQuestion(q) {
-  questionCard.querySelector(".question").textContent = q.question;
-  questionCard.querySelectorAll(".option").forEach((item, index) => {
-    item.innerHTML = `${index + 1}. ${q.options[index][0]}`;
-    item.setAttribute("data-correct", q.options[index][1]);
-    item.parentElement.addEventListener("click", handleSelection);
-  });
-}
-
-function startGame() {
-  startTimer();
-  displayQuestion(questions[questionIndex]);
-}
-
-function init() {
-  fetchHighscores();
-  displayElement(startCard, true);
-}
-
+// Event Listeners
 highscoresNav.addEventListener("click", () => {
-  abortGame();
-  hideAllCards();
+  abortGameTo(scoreCard);
   displayHighscores();
-  displayElement(scoreCard, true);
 });
 
 clearBtn.addEventListener("click", clearHighscores);
 
-newGameBtn.addEventListener("click", () => {
-  abortGame();
-  hideAllCards();
-  displayElement(startCard, true);
-});
+newGameBtn.addEventListener("click", () => abortGameTo(startCard));
 
-newGameNav.addEventListener("click", () => {
-  abortGame();
-  hideAllCards();
-  displayElement(startCard, true);
-});
+newGameNav.addEventListener("click", () => abortGameTo(startCard));
 
 startBtn.addEventListener("click", () => {
-  displayElement(startCard, false);
+  hideAllCards();
   displayElement(questionCard, true);
   startGame();
 });
@@ -238,4 +223,5 @@ endForm.addEventListener("submit", (e) => {
   displayHighscores();
 });
 
+// Start application on load
 init();
