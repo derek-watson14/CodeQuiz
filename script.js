@@ -1,32 +1,92 @@
 // Questions Data
 const questions = [
   {
-    question: "Commonly used data types DO NOT include:",
+    question: "Which of the following is NOT a semantic HTML tag?",
     options: [
-      ["Alert", true],
-      ["Boolean", false],
-      ["Number", false],
-      ["String", false],
+      "&lt;article&gt;",
+      "&lt;div&gt;",
+      "&lt;section&gt;",
+      "&lt;nav&gt;",
     ],
+    correct: 1,
+  },
+  {
+    question: "I could access the class 'myClass' with what syntax in CSS?",
+    options: ["#myClass{}", ".myClass()", ".myClass{}", "#myClass()"],
+    correct: 2,
   },
   {
     question:
-      "String values must be enclosed within ______ when being assigned to variables.",
-    options: [
-      ["Commas", false],
-      ["Brackets", false],
-      ["Quotes", true],
-      ["Parentheses", false],
-    ],
+      "Which of the following is NOT a keyword to define a variable in Javascript?",
+    options: ["string", "var", "let", "const"],
+    correct: 0,
   },
   {
-    question: "Arrays in JavaScript can be used to store ______.",
+    question:
+      "Setting this attribute on an <img> tag will set text for screen readers and for when the image fails to load:",
+    options: ["src", "type", "data", "alt"],
+    correct: 3,
+  },
+  {
+    question:
+      "What CSS syntax would I use to select ALL possible <a> tags in my navbar <nav>?",
+    options: ["nav a{}", "nav>a{}", "nav .a{}", "nav #a{}"],
+    correct: 0,
+  },
+  {
+    question: "What does an array storing the numbers 1, 2 and 3 look like?",
+    options: ["{1, 2, 3};", "['1', '2', '3']", "[1, 2, 3]", "{'1', '2', '3'}"],
+    correct: 2,
+  },
+  {
+    question:
+      "Which of the following is NOT a block element by default in HTML?",
+    options: ["&lt;div&gt;", "&lt;span&gt;", "&lt;form&gt;", "&lt;h1&gt;"],
+    correct: 1,
+  },
+  {
+    question:
+      "What is the syntax to change the CSS styles when an element is hovered?",
     options: [
-      ["Numbers and strings", false],
-      ["Other arrays", false],
-      ["Booleans", false],
-      ["All of the above", true],
+      "element;hover{}",
+      "element+hover{}",
+      "element>hover{}",
+      "element:hover{}",
     ],
+    correct: 3,
+  },
+  {
+    question:
+      "Which method allows you to save a reference to ANY DOM element to a variable?",
+    options: [
+      "getElementsByClassName()",
+      "getElementById()",
+      "getElementsByTagName()",
+      "querySelector()",
+    ],
+    correct: 3,
+  },
+  {
+    question:
+      "Which HTML tag is used to define a hyperlink, which links one page to another?",
+    options: ["&lt;a&gt;", "&lt;address&gt;", "&lt;link&gt;", "&lt;source&gt;"],
+    correct: 0,
+  },
+  {
+    question:
+      "Which CSS property-value pair will make an element into a flexbox conatiner?",
+    options: [
+      "style: flex;",
+      "flex-wrap: nowrap;",
+      "display: flex;",
+      "flex: 1;",
+    ],
+    correct: 2,
+  },
+  {
+    question: "Which of the following JS values is NOT falsy?",
+    options: ["0", "'false'", "''", "null"],
+    correct: 1,
   },
 ];
 
@@ -56,7 +116,7 @@ const clearBtn = document.querySelector(".clear-btn");
 // Global Variables
 let highscores;
 let questionIndex = 0;
-let clock = 100;
+let clock = 180;
 let ticker;
 
 // Initialize Application
@@ -105,13 +165,13 @@ function startTimer() {
 function displayQuestion(q) {
   questionCard.querySelector(".question").textContent = q.question;
   questionCard.querySelectorAll(".option").forEach((item, index) => {
-    item.innerHTML = `${index + 1}. ${q.options[index][0]}`;
-    item.setAttribute("data-correct", q.options[index][1]);
+    item.innerHTML = `${q.options[index]}`;
+    item.setAttribute("data-correct", index === q.correct ? "yes" : "no");
     item.parentElement.addEventListener("click", handleSelection);
   });
 }
 function handleSelection(e) {
-  const correct = e.target.dataset.correct === "true";
+  const correct = e.target.dataset.correct === "yes";
   const message = correct
     ? ["Correct!", "forestgreen"]
     : ["Incorrect!", "firebrick"];
