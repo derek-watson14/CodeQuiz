@@ -61,14 +61,14 @@ let ticker;
 
 // Initialize Application
 function init() {
+  showCard(startCard);
   clockDisplay.innerHTML = clock;
   fetchHighscores();
-  displayElement(startCard, true);
 }
 
 // Display and Utility Functions
-function displayElement(element, on) {
-  if (on) {
+function displayElement(element, yes) {
+  if (yes) {
     element.classList.remove("d-none");
     element.classList.add("d-block");
   } else {
@@ -76,11 +76,12 @@ function displayElement(element, on) {
     element.classList.add("d-none");
   }
 }
-function hideAllCards() {
+function showCard(card) {
   displayElement(startCard, false);
   displayElement(questionCard, false);
   displayElement(endCard, false);
   displayElement(scoreCard, false);
+  displayElement(card, true);
 }
 
 // Game Functions
@@ -142,9 +143,8 @@ function advanceGame() {
   }
 }
 function endGame() {
-  displayElement(questionCard, false);
-  displayElement(endCard, true);
   clearInterval(ticker);
+  showCard(endCard);
   endCard.querySelector(".final-score").textContent = clock;
 }
 function abortGameTo(card) {
@@ -152,8 +152,7 @@ function abortGameTo(card) {
   questionIndex = 0;
   clock = 100;
   clockDisplay.innerHTML = clock;
-  hideAllCards();
-  displayElement(card, true);
+  showCard(card);
 }
 
 // Highscore Functions
@@ -210,18 +209,17 @@ newGameBtn.addEventListener("click", () => abortGameTo(startCard));
 newGameNav.addEventListener("click", () => abortGameTo(startCard));
 
 startBtn.addEventListener("click", () => {
-  hideAllCards();
-  displayElement(questionCard, true);
+  showCard(questionCard);
   startGame();
 });
 
 endForm.addEventListener("submit", (e) => {
   e.preventDefault();
   updateHighscores({ initials: initialsInput.value, score: clock });
-  displayElement(endCard, false);
-  displayElement(scoreCard, true);
+  initialsInput.value = "";
+  showCard(scoreCard);
   displayHighscores();
 });
 
-// Start application on load
+// Start application
 init();
