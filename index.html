@@ -15,7 +15,7 @@
   <body>
     <div class="d-flex justify-content-between mb-4">
       <ul class="nav">
-        <li class="nav-item">
+        <li class="see-highscores nav-item">
           <a class="nav-link" href="#">View highscores</a>
         </li>
       </ul>
@@ -25,7 +25,10 @@
     <div class="container">
       <div class="row">
         <div class="col-md-8 m-auto">
-          <div class="start-card card align-items-center text-center p-3">
+          <!-- Homepage Card -->
+          <div
+            class="start-card card d-none align-items-center text-center p-3"
+          >
             <h2>Coding Quiz Challenge</h2>
             <p>
               Try to answer the following code-related questions within the time
@@ -34,10 +37,9 @@
             </p>
             <button class="start-btn btn btn-info">Start</button>
           </div>
+          <!-- Card that displays questions -->
           <div class="question-card card d-none text-center p-3">
-            <h3 class="question mb-3">
-              Commonly used data types DO NOT include:
-            </h3>
+            <h3 class="question mb-3"></h3>
             <div class="container">
               <div class="row">
                 <div class="col-md-6 d-flex justify-content-center">
@@ -55,22 +57,41 @@
                   <button class="btn btn-info mb-2 option"></button>
                 </div>
               </div>
-              <div class="result d-none">
+              <div class="q-result d-none">
                 <hr />
                 <p class="lead"></p>
               </div>
             </div>
           </div>
+          <!-- Card to enter initials -->
           <div class="end-card card d-none align-items-center text-center p-3">
             <h2>All done!</h2>
             <p>Your final score is <span class="final-score"></span>.</p>
-            <form action="" class="form-inline justify-content-center">
+            <form class="score-form form-inline justify-content-center">
               <div class="form-group">
                 <label class="mr-2" for="initials">Enter initials: </label>
-                <input class="mr-2" id="initials" type="text" />
+                <input class="mr-2" id="initials" type="text" maxlength="3" />
               </div>
               <button class="btn btn-info">Submit</button>
             </form>
+          </div>
+          <!-- Card with highscore table -->
+          <div class="score-card card d-none align-items-center p-3">
+            <h2 class="text-center">Highscores</h2>
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th scope="col">Rank</th>
+                  <th scope="col">Initials</th>
+                  <th scope="col">Score</th>
+                </tr>
+              </thead>
+              <tbody class="scores-body"></tbody>
+            </table>
+            <div class="align-items-start">
+              <button class="back-btn btn btn-info">Go Back</button>
+              <button class="clear-btn btn btn-info">Clear Highscores</button>
+            </div>
           </div>
         </div>
       </div>
